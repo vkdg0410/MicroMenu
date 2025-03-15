@@ -1,24 +1,24 @@
 
-> Az oldal megnyitása itt: [https://vkdg0410.github.io/micromenu/](https://vkdg0410.github.io/micromenu/)
+> Open the page here: [https://vkdg0410.github.io/micromenu/](https://vkdg0410.github.io/micromenu/)
 
-## Használj egy bővítményt
+## Use a plugin
 
-Ez a repó **bővítményként** használható a MakeCode-ban.
+This repo can be used as a **plugin** in MakeCode.
 
-* [https://makecode.microbit.org/](https://makecode.microbit.org/) megnyitása
-* kattints au **Új projekt**-re
-* kattints a **Bővítmények** gombra a fogaskerék menüben
-* **https://github.com/vkdg0410/micromenu** keresése, majd importálás
+* Open [https://makecode.microbit.org/](https://makecode.microbit.org/)
+* Click on **New Project**
+* Click on **Plugins** in the gear menu
+* Search for **https://github.com/vkdg0410/micromenu** and import
 
-## A projekt szerkesztése
+## Edit the project
 
-A repó szerkesztése a MakeCode-ban.
+Edit the repo in MakeCode.
 
-* [https://makecode.microbit.org/](https://makecode.microbit.org/) megnyitása
-* kattints az **Import**-ra, utána az **Import URL**-re
-* illeszd be a **https://github.com/vkdg0410/micromenu** címet és kattints az importra
+* Open [https://makecode.microbit.org/](https://makecode.microbit.org/)
+* click **Import**, then **Import URL**
+* paste **https://github.com/vkdg0410/micromenu** and click import
 
-#### Metaadatok (kereséshez, rendereléshez)
+#### Metadata (for searching, rendering)
 
 * for PXT/microbit
-<script src="https://makecode.com/gh-pages-embed.js"></script><script>makeCodeRender("{{ site.makecode.home_url }}", "{{ site.github.owner_name }}/{{ site.github.repository_name }}");</script>
+<script> src="https://makecode.com/gh-pages-embed.js"></script><script>makeCodeRender("{{ site.makecode.home_url }}", "{{ site.github.owner_name }}/{{ site.github.repository_name }}");</script>
