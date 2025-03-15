@@ -385,6 +385,7 @@ states.addLoopHandler("Mario", function () {
     basic.pause(500)
 })
 states.addLoopHandler("Mario", function () {
+    basic.pause(500)
     if (input.buttonIsPressed(Button.A)) {
         if (state == -1) {
             basic.clearScreen()
@@ -465,6 +466,7 @@ states.addLoopHandler("Fis", function () {
     }
 })
 states.addLoopHandler("Fis", function () {
+    basic.pause(500)
     if (fish_state == 0 && input.buttonIsPressed(Button.A)) {
         fish_state = 1
         basic.clearScreen()
