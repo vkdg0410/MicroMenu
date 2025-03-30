@@ -7,28 +7,24 @@ function check () {
             if (motion == 0 || motion == 1) {
                 fail = 1
             } else {
-                pass = 1
+                pass2 = 1
             }
+        } else if (motion == 1) {
+            pass2 = 1
         } else {
-            if (motion == 1) {
-                pass = 1
-            } else {
-                fail = 1
-            }
+            fail = 1
         }
     } else if (obs2 == 0) {
         if (obs2_status == 0) {
             if (motion == 0 || motion == 1) {
                 fail = 1
             } else {
-                pass = 1
+                pass2 = 1
             }
+        } else if (motion == 1) {
+            pass2 = 1
         } else {
-            if (motion == 1) {
-                pass = 1
-            } else {
-                fail = 1
-            }
+            fail = 1
         }
     }
     if (fail == 1) {
@@ -54,6 +50,15 @@ states.setEnterHandler("On", function () {
     appSD = 0
 })
 states.addLoopHandler("UIIAIOUIIIAI", function () {
+    if (input.pinIsPressed(TouchPin.P0)) {
+        ebld = 0
+    } else if (input.pinIsPressed(TouchPin.P1)) {
+        ebld = 1
+    } else if (input.pinIsPressed(TouchPin.P2)) {
+        ebld = 2
+    }
+})
+states.addLoopHandler("UIIAIOUIIIAI", function () {
     basic.clearScreen()
     if (ebld == 1) {
         led.plot(randint(0, 4), randint(0, 4))
@@ -61,15 +66,6 @@ states.addLoopHandler("UIIAIOUIIIAI", function () {
         led.plot(randint(0, 4), randint(0, 4))
         music.play(music.tonePlayable(523, music.beat(BeatFraction.Sixteenth)), music.PlaybackMode.UntilDone)
         basic.pause(10)
-    }
-})
-states.addLoopHandler("UIIAIOUIIIAI", function () {
-    if (input.pinIsPressed(TouchPin.P0)) {
-        ebld = 0
-    } else if (input.pinIsPressed(TouchPin.P1)) {
-        ebld = 1
-    } else if (input.pinIsPressed(TouchPin.P2)) {
-        ebld = 2
     }
 })
 function ShowFish () {
@@ -169,7 +165,7 @@ states.addLoopHandler("OnSDM", function () {
     } else if (appDMod == 2) {
         states.setState("Flash")
     } else if (appDMod == 3) {
-        basic.showString("V 2.0")
+        states.setState("V")
     }
 })
 states.addLoopHandler("Sleep", function () {
@@ -177,20 +173,44 @@ states.addLoopHandler("Sleep", function () {
     music.play(music.builtinPlayableSoundEffect(soundExpression.yawn), music.PlaybackMode.UntilDone)
     basic.showString("ZZZ")
 })
+states.addLoopHandler("Cloc", function () {
+    basic.pause(1000)
+    if (input.buttonIsPressed(Button.A)) {
+        states.setState("ClocS")
+    } else if (input.buttonIsPressed(Button.B)) {
+        ModeCloc += 1
+    }
+})
+states.addLoopHandler("Cloc", function () {
+    if (ModeCloc == 0) {
+        basic.showLeds(`
+            . . # . .
+            . . # . .
+            . . # # .
+            . . . . .
+            . . . . .
+            `)
+    } else if (ModeCloc == 1) {
+        basic.showLeds(`
+            # . # . #
+            . . # . .
+            # # # # #
+            . . # . .
+            # . # . #
+            `)
+    }
+})
+states.addLoopHandler("Cloc", function () {
+    if (ModeCloc == 2) {
+        ModeCloc = 0
+    }
+})
 states.setEnterHandler("UIIAIOUIIIAI", function () {
     ebld = 1
 })
-states.addLoopHandler("On", function () {
-    if (appSD == 3) {
-        appSD = 0
-    }
-})
-states.addLoopHandler("On", function () {
-    if (input.buttonIsPressed(Button.A)) {
-        states.setState("OnLDD")
-    } else if (input.buttonIsPressed(Button.B)) {
-        appSD += 1
-    }
+states.setEnterHandler("Tim", function () {
+    basic.showString(timeanddate.time(timeanddate.TimeFormat.HHMM24hr))
+    states.setState("Cloc")
 })
 states.addLoopHandler("On", function () {
     led.setBrightness(255)
@@ -218,10 +238,60 @@ states.addLoopHandler("On", function () {
             . # # . #
             . . . . .
             `)
+    } else if (appSD == 3) {
+        basic.showLeds(`
+            # # # # #
+            # . # . #
+            # . # # #
+            # . . . #
+            # # # # #
+            `)
     }
 })
+states.addLoopHandler("On", function () {
+    if (appSD == 4) {
+        appSD = 0
+    }
+})
+states.addLoopHandler("On", function () {
+    if (input.buttonIsPressed(Button.A)) {
+        states.setState("OnLDD")
+    } else if (input.buttonIsPressed(Button.B)) {
+        appSD += 1
+    }
+})
+states.setEnterHandler("Cloc", function () {
+    ModeCloc = 0
+})
+states.setEnterHandler("V", function () {
+    basic.showString("V 1.0")
+    states.setState("OnSDM")
+})
+states.setEnterHandler("Sit", function () {
+    hur = 0
+    min = 0
+    basic.showString(timeanddate.time(timeanddate.TimeFormat.HHMM24hr))
+    basic.showString("" + (hur))
+    while (!(input.buttonIsPressed(Button.B))) {
+        if (input.buttonIsPressed(Button.A) && hur != 25) {
+            hur += 1
+        } else if (hur == 25) {
+            hur = 0
+        }
+    }
+    basic.showString("" + (min))
+    while (!(input.buttonIsPressed(Button.B))) {
+        if (input.buttonIsPressed(Button.A) && min != 60) {
+            min += 1
+        } else if (min == 60) {
+            min = 0
+        }
+    }
+    states.setState("Cloc")
+})
 function ShowFishingLine () {
-    if (show_fishingline == 2) {
+    let index: number;
+if (show_fishingline == 2) {
         fishline_max = 4
         if (fishX == 2) {
             fishline_max = fishY
@@ -229,8 +299,10 @@ function ShowFishingLine () {
             fishY = -1
             fish_score += 10
         }
-        for (let index = 0; index <= fishline_max - 1; index++) {
+        index = 0
+        while (index <= fishline_max - 1) {
             led.plotBrightness(2, 1 + index, 100)
+            index += 1
         }
     } else if (show_fishingline == 1) {
         for (let index2 = 0; index2 <= 3; index2++) {
@@ -238,18 +310,6 @@ function ShowFishingLine () {
         }
     }
 }
-states.addLoopHandler("Debug", function () {
-    if (appDMod == 4) {
-        appDMod = 0
-    }
-})
-states.addLoopHandler("Debug", function () {
-    if (input.buttonIsPressed(Button.A)) {
-        states.setState("OnSDM")
-    } else if (input.buttonIsPressed(Button.B)) {
-        appDMod += 1
-    }
-})
 states.addLoopHandler("Debug", function () {
     led.setBrightness(255)
     if (appDMod == 0) {
@@ -286,6 +346,26 @@ states.addLoopHandler("Debug", function () {
             `)
     }
 })
+states.addLoopHandler("Debug", function () {
+    if (appDMod == 4) {
+        appDMod = 0
+    }
+})
+states.addLoopHandler("Debug", function () {
+    if (input.buttonIsPressed(Button.A)) {
+        states.setState("OnSDM")
+    } else if (input.buttonIsPressed(Button.B)) {
+        appDMod += 1
+    }
+})
+states.addLoopHandler("ClocS", function () {
+    basic.clearScreen()
+    if (ModeCloc == 0) {
+        states.setState("Tim")
+    } else if (ModeCloc == 1) {
+        states.setState("Sit")
+    }
+})
 states.addLoopHandler("OnLDD", function () {
     basic.clearScreen()
     if (appSD == 0) {
@@ -294,6 +374,8 @@ states.addLoopHandler("OnLDD", function () {
         states.setState("Mario")
     } else if (appSD == 2) {
         states.setState("Fis")
+    } else if (appSD == 3) {
+        states.setState("Cloc")
     }
 })
 states.setEnterHandler("Debug", function () {
@@ -371,12 +453,12 @@ states.addLoopHandler("Mario", function () {
                 obs2 = 5
             }
         }
-        pass = 0
+        pass2 = 0
         show_mario()
         check()
         show_obs()
         check()
-        if (pass == 1) {
+        if (pass2 == 1) {
             score += 5
         }
     } else {
@@ -385,7 +467,6 @@ states.addLoopHandler("Mario", function () {
     basic.pause(500)
 })
 states.addLoopHandler("Mario", function () {
-    basic.pause(500)
     if (input.buttonIsPressed(Button.A)) {
         if (state == -1) {
             basic.clearScreen()
@@ -466,7 +547,6 @@ states.addLoopHandler("Fis", function () {
     }
 })
 states.addLoopHandler("Fis", function () {
-    basic.pause(500)
     if (fish_state == 0 && input.buttonIsPressed(Button.A)) {
         fish_state = 1
         basic.clearScreen()
@@ -499,21 +579,19 @@ states.addLoopHandler("Fis", function () {
         if (fishX == -1) {
             fishX = 5
             fishY = randint(2, 4)
-        } else {
-            if (speed <= 0) {
-                if (fish_score >= 200) {
-                    speed = 1
-                } else if (fish_score >= 100) {
-                    speed = 3
-                } else if (fish_score >= 50) {
-                    speed = 5
-                } else {
-                    speed = 10
-                }
-                ShowFish()
+        } else if (speed <= 0) {
+            if (fish_score >= 200) {
+                speed = 1
+            } else if (fish_score >= 100) {
+                speed = 3
+            } else if (fish_score >= 50) {
+                speed = 5
             } else {
-                speed += -1
+                speed = 10
             }
+            ShowFish()
+        } else {
+            speed += -1
         }
     } else {
     	
@@ -524,6 +602,9 @@ let speed = 0
 let motion_lock = 0
 let fishline_max = 0
 let show_fishingline = 0
+let min = 0
+let hur = 0
+let ModeCloc = 0
 let appDMod = 0
 let fish_score = 0
 let fish_miss = 0
@@ -534,7 +615,7 @@ let appSD = 0
 let fish_state = 0
 let score = 0
 let obs2_status = 0
-let pass = 0
+let pass2 = 0
 let fail = 0
 let motion = 0
 let obs1_status = 0
